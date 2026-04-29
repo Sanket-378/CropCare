@@ -1,17 +1,22 @@
 import { FaHome, FaInfoCircle, FaEnvelope, FaUser, FaSignInAlt } from "react-icons/fa";
 import { Routes, Route, Link } from "react-router-dom";
+import { useEffect } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import IdentifyDisease from "./pages/IdentifyDisease";
+import CropRecommend from "./pages/CropRecommend";
 
 // ✅ HOME COMPONENT (your full UI moved here — unchanged)
 function Home() {
   return (
     <>
+
       {/* NAVBAR */}
       <nav className="bg-gray-100 px-12 py-3 flex justify-between items-center shadow-sm">
         <div className="flex items-center gap-2 text-green-600 font-bold text-lg">
           🌿 CROP CARE
         </div>
+        
 
         <div className="flex items-center gap-6 text-sm font-medium">
 
@@ -41,6 +46,7 @@ function Home() {
 
         </div>
       </nav>
+
 
       {/* ====== YOUR FULL UI BELOW (UNCHANGED) ====== */}
 
@@ -102,9 +108,11 @@ function Home() {
             <p className="text-sm text-gray-600 mb-6">
               Advanced AI-powered disease detection for your crops
             </p>
-            <button className="bg-green-600 text-white px-5 py-2 rounded-lg text-sm hover:bg-green-700 transition">
-              Identify Diseases →
-            </button>
+            <Link to="/identify">
+              <button className="bg-green-600 text-white px-4 py-2 rounded-lg">
+                Identify Diseases →
+              </button>
+            </Link>
           </div>
 
           {/* Card 2 */}
@@ -118,9 +126,11 @@ function Home() {
             <p className="text-sm text-gray-600 mb-6">
               Smart recommendations based on soil and climate
             </p>
-            <button className="bg-green-600 text-white px-5 py-2 rounded-lg text-sm hover:bg-green-700 transition">
-              Get Prediction →
-            </button>
+            <Link to="/crop_recommend">
+              <button className="bg-green-600 text-white px-4 py-2 rounded-lg">
+                Get Prediction →
+              </button>
+            </Link>
           </div>
 
           {/* Card 3 */}
@@ -233,79 +243,7 @@ function Home() {
         </div>
 
       </section>
-		      <section id="about" className="bg-[#eef3ea] py-20 px-10">
-
-        {/* Heading */}
-        <h2 className="text-center text-2xl md:text-3xl font-bold text-green-700 mb-12">
-          About Our Platform
-        </h2>
-
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-
-          {/* Left Content */}
-          <div className="text-gray-700 text-sm leading-7">
-            <p className="mb-4">
-              This platform helps farmers to easily identify crop diseases and
-              receive crop recommendations based on their soil types. Our project
-              aims to revolutionize Indian agriculture through technology by
-              integrating real-time weather forecasts, crop disease detection,
-              and crop recommendations.
-            </p>
-
-            <p>
-              By leveraging data-driven insights, we empower farmers with the right
-              knowledge to enhance yield, reduce losses, and promote sustainable
-              farming practices.
-            </p>
-          </div>
-
-          {/* Right Cards */}
-          <div className="flex flex-wrap gap-6 justify-center">
-
-            {/* Card 1 */}
-            <div className="bg-white rounded-xl shadow-md p-6 w-40 text-center hover:shadow-lg transition">
-              <div className="w-12 h-12 mx-auto mb-3 bg-green-100 text-green-600 flex items-center justify-center rounded-full text-xl">
-                🧠
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-1">
-                AI-Powered
-              </h4>
-              <p className="text-xs text-gray-600">
-                Advanced algorithms for accurate predictions
-              </p>
-            </div>
-
-            {/* Card 2 */}
-            <div className="bg-white rounded-xl shadow-md p-6 w-40 text-center hover:shadow-lg transition">
-              <div className="w-12 h-12 mx-auto mb-3 bg-green-100 text-green-600 flex items-center justify-center rounded-full text-xl">
-                📱
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-1">
-                Mobile Friendly
-              </h4>
-              <p className="text-xs text-gray-600">
-                Access anywhere, anytime
-              </p>
-            </div>
-
-            {/* Card 3 */}
-            <div className="bg-white rounded-xl shadow-md p-6 w-40 text-center hover:shadow-lg transition">
-              <div className="w-12 h-12 mx-auto mb-3 bg-green-100 text-green-600 flex items-center justify-center rounded-full text-xl">
-                📊
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-1">
-                Data-Driven
-              </h4>
-              <p className="text-xs text-gray-600">
-                Based on real agricultural data
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
+		     
 
 
       {/* FOOTER */}
@@ -376,6 +314,8 @@ function App() {
   <Route path="/" element={<Home />} />
   <Route path="/login" element={<Login />} />
   <Route path="/register" element={<Register />} />
+  <Route path="/identify" element={<IdentifyDisease />} />
+  <Route path="/crop_recommend" element={<CropRecommend />} />
 </Routes>
   );
 }

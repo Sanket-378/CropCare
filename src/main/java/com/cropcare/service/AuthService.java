@@ -13,7 +13,7 @@ public class AuthService {
     private UserRepository repo;
 
     @Autowired
-    private BCryptPasswordEncoder encoder;
+    private BCryptPasswordEncoder passwordEncoder;
 
     public String register(User user) {
 
@@ -22,7 +22,7 @@ public class AuthService {
         }
 
         // 🔐 Encrypt password
-        user.setPassword(encoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         repo.save(user);
 
@@ -35,7 +35,7 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // 🔐 Match password
-        if (encoder.matches(password, user.getPassword())) {
+        if (passwordEncoder.matches(password, user.getPassword())) {
             return "Login successful";
         }
 
