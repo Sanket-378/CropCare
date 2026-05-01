@@ -1,10 +1,12 @@
 import { FaHome, FaInfoCircle, FaEnvelope, FaUser, FaSignInAlt } from "react-icons/fa";
 import { Routes, Route, Link } from "react-router-dom";
+import { FaRobot } from "react-icons/fa";
 import { useEffect } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import IdentifyDisease from "./pages/IdentifyDisease";
 import CropRecommend from "./pages/CropRecommend";
+import AIChatbot from "./pages/AIChatbot";
 
 // ✅ HOME COMPONENT (your full UI moved here — unchanged)
 function Home() {
@@ -91,6 +93,15 @@ function Home() {
           </div>
         </div>
       </section>
+      <Link to="/ai-chat">
+
+        <div className="fixed bottom-6 right-6 bg-green-600 text-white p-5 rounded-full shadow-2xl hover:scale-110 transition cursor-pointer z-50">
+
+          <FaRobot size={28} />
+
+        </div>
+
+      </Link>
 
       {/* FEATURES */}
 <section className="bg-[#eef3ea] py-16 px-10">
@@ -307,6 +318,7 @@ function Home() {
 }
 
 
+
 // ✅ MAIN APP (ROUTER ONLY)
 function App() {
   return (
@@ -316,6 +328,7 @@ function App() {
   <Route path="/register" element={<Register />} />
   <Route path="/identify" element={<IdentifyDisease />} />
   <Route path="/crop_recommend" element={<CropRecommend />} />
+  <Route path="/ai-chat" element={<AIChatbot />} />
 </Routes>
   );
 }
