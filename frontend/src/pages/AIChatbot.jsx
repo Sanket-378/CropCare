@@ -315,9 +315,6 @@ Give short and useful farming advice.
         </div>
 
 
-
-        
-
       </div>
 
       {/* RIGHT SIDE HISTORY */}
