@@ -22,17 +22,41 @@ public class AIService {
             JSONObject body = new JSONObject();
 
             body.put("model", "openai/gpt-3.5-turbo");
+
             JSONArray messages = new JSONArray();
 
             JSONObject userMessage = new JSONObject();
 
             userMessage.put("role", "user");
 
+            // UPDATED PROMPT
+
             userMessage.put(
                     "content",
-                    "You are an AI Farmer Assistant. " +
-                            "Answer farming questions in simple English, Hindi, or Marathi. " +
-                            "Give crop disease remedies, fertilizer suggestions, weather guidance, and farming tips. " +
+                    "You are an AI Farmer Assistant for the CropCare project. " +
+
+                            "Rules: " +
+
+                            "1. Answer ONLY farming and agriculture related questions. " +
+
+                            "2. Allowed topics are crops, fertilizers, soil, irrigation, weather, pesticides, plant diseases, organic farming, farming techniques, and crop recommendations. " +
+
+                            "3. IMPORTANT: If the user asks to translate, explain, summarize, or reply in another language for a previous farming answer, then allow it and respond properly. " +
+
+                            "You can reply in English, Hindi, or Marathi based on the user's request. " +
+
+                            "4. Allow translation, explanation, summarization, or language conversion requests if they are related to a farming answer. " +
+
+                            "5. If the user asks anything completely unrelated to farming or agriculture, reply ONLY with: " +
+
+                            "'Please ask only farming and agriculture related questions.' " +
+
+                            "6. Keep answers short, simple, and farmer-friendly. " +
+
+                            "7. Support English, Hindi, and Marathi languages. " +
+
+                            "8. If translation is requested, translate the farming-related response appropriately. " +
+
                             "Question: " + message
             );
 

@@ -211,7 +211,9 @@ Give short and useful farming advice.
 
         {/* HEADER */}
 
-        <div className="bg-green-700 text-white p-4 flex items-center justify-between shadow-lg">
+        <div className="bg-green-700 text-white px-5 py-4 flex items-center justify-between shadow-lg h-[55px]">
+
+          {/* LEFT SIDE */}
 
           <div className="flex items-center gap-3">
 
@@ -228,7 +230,7 @@ Give short and useful farming advice.
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="text-black px-3 py-2 rounded-lg outline-none"
+            className="text-black px-3 py-2 rounded-lg outline-none h-07"
           >
 
             <option>English</option>
@@ -319,12 +321,27 @@ Give short and useful farming advice.
 
       {/* RIGHT SIDE HISTORY */}
 
-      <div className="w-1/3 bg-white flex flex-col">
+      <div className="w-1/3 bg-white flex flex-col h-screen">
 
         {/* HISTORY HEADER */}
 
-        <div className="bg-green-700 text-white p-4 text-xl font-bold">
-          Chat History
+        <div className="bg-green-700 text-white px-5 py-4 flex items-center justify-between shadow-lg h-[55px]">
+
+          <h2 className="text-2xl font-bold">
+            Chat History
+          </h2>
+
+          {/* HOME BUTTON */}
+
+          <button
+            onClick={() => window.location.href = "/"}
+            className="bg-white text-green-700 font-semibold px-4 py-2 rounded-lg hover:bg-green-100 transition h-08"
+          >
+
+            Home
+
+          </button>
+
         </div>
 
         {/* NEW CHAT BUTTON */}
@@ -337,6 +354,7 @@ Give short and useful farming advice.
           >
 
             <FaPlus />
+
             New Chat
 
           </button>
