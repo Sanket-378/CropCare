@@ -21,6 +21,7 @@ target/
 *.ipr
 
 ### NetBeans ###
+
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -29,6 +30,34 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+# ==============================
+# FRONTEND
+# ==============================
+frontend/node_modules/
+frontend/dist/
+
+# ==============================
+# PYTHON / DL MODEL
+# ==============================
+dl-model/venv/
+dl-model/dataset/
+dl-model/__pycache__/
+dl-model/*.h5
+dl-model/*.keras
+dl-model/*.pt
+dl-model/*.pth
+
+# ==============================
+# PYTHON CACHE
+# ==============================
+*.pyc
+__pycache__/
+
+# ==============================
+# ENV FILES
+# ==============================
+.env
 
 ### VS Code ###
 .vscode/

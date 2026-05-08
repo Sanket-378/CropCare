@@ -1,6 +1,6 @@
 import { FaHome, FaInfoCircle, FaEnvelope, FaUser, FaSignInAlt } from "react-icons/fa";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
-import { FaRobot } from "react-icons/fa";
+import { FaRobot, FaMoon, FaSun, FaCloudSun } from "react-icons/fa";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Login from "./pages/Login";
@@ -9,6 +9,7 @@ import IdentifyDisease from "./pages/IdentifyDisease";
 import CropRecommend from "./pages/CropRecommend";
 import AIChatbot from "./pages/AIChatbot";
 import WeatherPrediction from "./pages/WeatherPrediction";
+import RealImage from "./pages/RealImage";
 
 // ✅ HOME COMPONENT (your full UI moved here — unchanged)
 function Home() {
@@ -20,7 +21,7 @@ function Home() {
         <div className="flex items-center gap-2 text-green-600 font-bold text-lg">
           🌿 CROP CARE
         </div>
-        
+
 
         <div className="flex items-center gap-6 text-sm font-medium">
 
@@ -35,6 +36,7 @@ function Home() {
           <a href="#contact" className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-green-600 hover:text-white transition">
             <FaEnvelope /> Contact
           </a>
+
 
           {/* ✅ FIXED LOGIN LINK */}
           <Link
@@ -414,6 +416,7 @@ function App() {
   <Route path="/crop_recommend" element={<CropRecommend />} />
   <Route path="/ai-chat" element={<AIChatbot />} />
   <Route path="/weather" element={<WeatherPrediction />} />
+  <Route path="/real-image" element={<RealImage />} />
 </Routes>
   );
 }

@@ -1,33 +1,44 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function IdentifyDisease() {
+
+  const navigate = useNavigate();
+
   const [crop, setCrop] = useState("");
   const [symptom, setSymptom] = useState("");
 
   const handleSubmit = () => {
     console.log(crop, symptom);
-    // later we call backend here
   };
 
   return (
+
     <div className="min-h-screen bg-[url('https://images.unsplash.com/photo-1500382017468-9049fed747ef')] bg-cover bg-center flex flex-col">
 
       {/* TOP NAV BUTTONS */}
       <div className="p-4 flex gap-4">
-        <Link to="/" className="bg-green-500 text-white px-4 py-2 rounded-full">
+
+        <Link
+          to="/"
+          className="bg-green-500 text-white px-4 py-2 rounded-full"
+        >
           Home
         </Link>
+
         <button className="bg-green-400 text-white px-4 py-2 rounded-full">
           Weather
         </button>
+
         <button className="bg-green-300 text-white px-4 py-2 rounded-full">
           About
         </button>
+
       </div>
 
       {/* CENTER CARD */}
       <div className="flex justify-center items-center flex-grow">
+
         <div className="bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-[350px] text-center border border-green-300">
 
           <h2 className="text-2xl font-bold text-green-700 mb-4">
@@ -35,7 +46,10 @@ export default function IdentifyDisease() {
           </h2>
 
           {/* CROP SELECT */}
-          <label className="block text-green-700 mb-2">🌱 Select Crop</label>
+          <label className="block text-green-700 mb-2">
+            🌱 Select Crop
+          </label>
+
           <select
             value={crop}
             onChange={(e) => setCrop(e.target.value)}
@@ -49,7 +63,10 @@ export default function IdentifyDisease() {
           </select>
 
           {/* SYMPTOM SELECT */}
-          <label className="block text-green-700 mb-2">🌿 Select Symptom</label>
+          <label className="block text-green-700 mb-2">
+            🌿 Select Symptom
+          </label>
+
           <select
             value={symptom}
             onChange={(e) => setSymptom(e.target.value)}
@@ -61,7 +78,7 @@ export default function IdentifyDisease() {
             <option>Wilting</option>
           </select>
 
-          {/* BUTTON */}
+          {/* FIND DISEASE BUTTON */}
           <button
             onClick={handleSubmit}
             className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 mb-3"
@@ -69,8 +86,12 @@ export default function IdentifyDisease() {
             🔍 FIND DISEASE
           </button>
 
-          <button className="w-full bg-green-500 text-white py-2 rounded-lg">
-            REAL IMAGE
+          {/* REAL IMAGE BUTTON */}
+          <button
+            onClick={() => navigate("/real-image")}
+            className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition"
+          >
+            📷 REAL IMAGE
           </button>
 
           {/* RESULT BOX */}
@@ -79,7 +100,9 @@ export default function IdentifyDisease() {
           </div>
 
         </div>
+
       </div>
+
     </div>
   );
 }
