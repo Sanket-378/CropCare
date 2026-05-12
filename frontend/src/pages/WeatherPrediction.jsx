@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import axios from "axios";
+
 import {
   FaCloudSun,
   FaSearch,
@@ -25,6 +27,97 @@ export default function WeatherPrediction() {
   }, []);
 
   const [city, setCity] = useState("Mumbai");
+
+  const [weatherData, setWeatherData] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+
+  // GET WEATHER BY CITY
+
+  const getWeather = async () => {
+
+    try {
+
+      setLoading(true);
+
+      const response = await axios.get(
+        `http://localhost:8080/api/weather/${city}`
+      );
+
+      setWeatherData(response.data);
+
+      setLoading(false);
+
+    } catch (error) {
+
+      console.log(error);
+
+      setLoading(false);
+
+      alert("City not found");
+    }
+  };
+
+  // CURRENT LOCATION WEATHER
+
+  const getCurrentLocation = () => {
+
+    navigator.geolocation.getCurrentPosition(
+
+      async (position) => {
+
+        const lat = position.coords.latitude;
+
+        const lon = position.coords.longitude;
+
+        try {
+
+          const response = await axios.get(
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=79a3f444d846e076ef99c344e342637f&units=metric`
+          );
+
+          setWeatherData(response.data);
+
+        } catch (error) {
+
+          console.log(error);
+        }
+      }
+    );
+  };
+
+  // LOAD DEFAULT CITY
+
+  useEffect(() => {
+
+    getWeather();
+
+  }, []);
+
+  const getGreeting = () => {
+
+      const hour = new Date().getHours();
+
+      if (hour >= 0 && hour < 12) {
+
+          return "Good Morning";
+      }
+
+      else if (hour >= 12 && hour < 16) {
+
+          return "Good Afternoon";
+      }
+
+      else if (hour >= 16 && hour < 19) {
+
+          return "Good Evening";
+      }
+
+      else {
+
+          return "Good Night";
+      }
+  };
 
   return (
 
@@ -106,6 +199,7 @@ export default function WeatherPrediction() {
             />
 
             <button
+              onClick={getWeather}
               className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full font-bold shadow-lg flex items-center gap-2"
             >
               <FaSearch />
@@ -114,7 +208,10 @@ export default function WeatherPrediction() {
 
           </div>
 
-          <button className="w-full border border-dashed border-green-300 rounded-full py-3 mt-5 text-green-600 hover:bg-green-50">
+          <button
+            onClick={getCurrentLocation}
+            className="w-full border border-dashed border-green-300 rounded-full py-3 mt-5 text-green-600 hover:bg-green-50"
+          >
 
             📍 Use Current Location
 
@@ -126,129 +223,168 @@ export default function WeatherPrediction() {
 
         <div className="bg-white rounded-3xl shadow-lg p-6 mb-8">
 
-          <div className="flex justify-between items-start mb-6">
+          {loading ? (
 
-            <div>
+            <h1 className="text-center text-2xl font-bold text-green-700">
+              Loading Weather...
+            </h1>
 
-              <h2 className="text-2xl font-bold text-green-700 flex items-center gap-2">
-                <FaMapMarkerAlt className="text-orange-400" />
-                New York
-              </h2>
+          ) : (
 
-            </div>
+            <>
+              <div className="flex justify-between items-start mb-6">
 
-            <div className="text-right">
+                <div>
 
-              <p className="text-gray-500">Loading...</p>
+                  <h2 className="text-2xl font-bold text-green-700 flex items-center gap-2">
+                    <FaMapMarkerAlt className="text-orange-400" />
 
-              <p className="text-green-600 font-semibold">
-                Good Morning
-              </p>
+                    {weatherData?.city?.name}
 
-            </div>
+                  </h2>
 
-          </div>
+                </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+                <div className="text-right">
 
-            {/* LEFT */}
+                  <p className="text-gray-500">
+                    Live Weather
+                  </p>
 
-            <div className="flex items-center gap-6">
+                  <p className="text-green-600 font-semibold">
+                      {getGreeting()}
+                  </p>
 
-              <div className="bg-green-50 p-5 rounded-2xl">
-
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/1163/1163661.png"
-                  alt="weather"
-                  className="w-20"
-                />
-
-                <h1 className="text-5xl font-bold text-green-700 mt-3">
-                  25°C
-                </h1>
+                </div>
 
               </div>
 
-              <div>
+              <div className="grid md:grid-cols-2 gap-8">
 
-                <h3 className="text-2xl font-bold text-green-700">
-                  Clear Sky
-                </h3>
+                {/* LEFT */}
 
-                <p className="text-gray-500 mt-2">
-                  Feels like 27°C
-                </p>
+                <div className="flex items-center gap-6">
+
+                  <div className="bg-green-50 p-5 rounded-2xl">
+
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/1163/1163661.png"
+                      alt="weather"
+                      className="w-20"
+                    />
+
+                    <h1 className="text-5xl font-bold text-green-700 mt-3">
+
+                      {Math.round(weatherData?.list?.[0]?.main?.temp)}°C
+
+                    </h1>
+
+                  </div>
+
+                  <div>
+
+                    <h3 className="text-2xl font-bold text-green-700">
+
+                      {weatherData?.list?.[0]?.weather?.[0]?.description}
+
+                    </h3>
+
+                    <p className="text-gray-500 mt-2">
+
+                      Feels like {Math.round(weatherData?.list?.[0]?.main?.feels_like)}°C
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+                {/* RIGHT */}
+
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+                  <div className="border rounded-2xl p-4">
+                    <p className="text-gray-500 text-sm flex items-center gap-2">
+                      <FaTint className="text-green-500" />
+                      HUMIDITY
+                    </p>
+
+                    <h2 className="text-xl font-bold text-green-700">
+
+                      {weatherData?.list?.[0]?.main?.humidity}%
+
+                    </h2>
+                  </div>
+
+                  <div className="border rounded-2xl p-4">
+                    <p className="text-gray-500 text-sm flex items-center gap-2">
+                      <FaWind className="text-green-500" />
+                      WIND SPEED
+                    </p>
+
+                    <h2 className="text-xl font-bold text-green-700">
+
+                      {weatherData?.list?.[0]?.wind?.speed} km/h
+
+                    </h2>
+                  </div>
+
+                  <div className="border rounded-2xl p-4">
+                    <p className="text-gray-500 text-sm flex items-center gap-2">
+                      <FaEye className="text-green-500" />
+                      VISIBILITY
+                    </p>
+
+                    <h2 className="text-xl font-bold text-green-700">
+
+                      {weatherData?.list?.[0]?.visibility / 1000} km
+
+                    </h2>
+                  </div>
+
+                  <div className="border rounded-2xl p-4">
+                    <p className="text-gray-500 text-sm flex items-center gap-2">
+                      <FaTemperatureHigh className="text-green-500" />
+                      PRESSURE
+                    </p>
+
+                    <h2 className="text-xl font-bold text-green-700">
+
+                      {weatherData?.list?.[0]?.main?.pressure} hPa
+
+                    </h2>
+                  </div>
+
+                  <div className="border rounded-2xl p-4">
+                    <p className="text-gray-500 text-sm flex items-center gap-2">
+                      <FaSun className="text-green-500" />
+                      WEATHER
+                    </p>
+
+                    <h2 className="text-xl font-bold text-green-700">
+
+                      {weatherData?.list?.[0]?.weather?.[0]?.main}
+
+                    </h2>
+                  </div>
+
+                  <div className="border rounded-2xl p-4">
+                    <p className="text-gray-500 text-sm flex items-center gap-2">
+                      🌡️ TEMP MAX
+                    </p>
+
+                    <h2 className="text-xl font-bold text-green-700">
+
+                      {Math.round(weatherData?.list?.[0]?.main?.temp_max)}°C
+
+                    </h2>
+                  </div>
+
+                </div>
 
               </div>
-
-            </div>
-
-            {/* RIGHT */}
-
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-
-              <div className="border rounded-2xl p-4">
-                <p className="text-gray-500 text-sm flex items-center gap-2">
-                  <FaTint className="text-green-500" />
-                  HUMIDITY
-                </p>
-                <h2 className="text-xl font-bold text-green-700">
-                  65%
-                </h2>
-              </div>
-
-              <div className="border rounded-2xl p-4">
-                <p className="text-gray-500 text-sm flex items-center gap-2">
-                  <FaWind className="text-green-500" />
-                  WIND SPEED
-                </p>
-                <h2 className="text-xl font-bold text-green-700">
-                  5 km/h
-                </h2>
-              </div>
-
-              <div className="border rounded-2xl p-4">
-                <p className="text-gray-500 text-sm flex items-center gap-2">
-                  <FaEye className="text-green-500" />
-                  VISIBILITY
-                </p>
-                <h2 className="text-xl font-bold text-green-700">
-                  10 km
-                </h2>
-              </div>
-
-              <div className="border rounded-2xl p-4">
-                <p className="text-gray-500 text-sm flex items-center gap-2">
-                  <FaTemperatureHigh className="text-green-500" />
-                  PRESSURE
-                </p>
-                <h2 className="text-xl font-bold text-green-700">
-                  1013 hPa
-                </h2>
-              </div>
-
-              <div className="border rounded-2xl p-4">
-                <p className="text-gray-500 text-sm flex items-center gap-2">
-                  <FaSun className="text-green-500" />
-                  UV INDEX
-                </p>
-                <h2 className="text-xl font-bold text-green-700">
-                  5
-                </h2>
-              </div>
-
-              <div className="border rounded-2xl p-4">
-                <p className="text-gray-500 text-sm flex items-center gap-2">
-                  🌡️ DEW POINT
-                </p>
-                <h2 className="text-xl font-bold text-green-700">
-                  18°C
-                </h2>
-              </div>
-
-            </div>
-
-          </div>
+            </>
+          )}
 
         </div>
 
@@ -265,7 +401,7 @@ export default function WeatherPrediction() {
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
 
-            {["9 AM", "12 PM", "3 PM", "6 PM", "9 PM"].map((time, index) => (
+            {weatherData?.list?.slice(0, 5).map((item, index) => (
 
               <div
                 key={index}
@@ -273,7 +409,12 @@ export default function WeatherPrediction() {
               >
 
                 <h3 className="font-bold text-green-700">
-                  {time}
+
+                  {new Date(item.dt_txt).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                  })}
+
                 </h3>
 
                 <img
@@ -283,10 +424,13 @@ export default function WeatherPrediction() {
                 />
 
                 <p className="text-lg font-bold text-green-700">
-                  {24 + index}°C
+
+                  {Math.round(item.main.temp)}°C
+
                 </p>
 
               </div>
+
             ))}
 
           </div>
@@ -306,33 +450,45 @@ export default function WeatherPrediction() {
 
           <div className="grid md:grid-cols-5 gap-4">
 
-            {["Mon", "Tue", "Wed", "Thu", "Fri"].map((day, index) => (
+            {weatherData?.list
+              ?.filter((item, index) => index % 8 === 0)
+              ?.slice(0, 5)
+              ?.map((item, index) => (
 
-              <div
-                key={index}
-                className="bg-green-50 rounded-2xl p-4 text-center"
-              >
+                <div
+                  key={index}
+                  className="bg-green-50 rounded-2xl p-4 text-center"
+                >
 
-                <h3 className="font-bold text-green-700 text-lg">
-                  {day}
-                </h3>
+                  <h3 className="font-bold text-green-700 text-lg">
 
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/414/414927.png"
-                  alt=""
-                  className="w-14 mx-auto my-3"
-                />
+                    {new Date(item.dt_txt).toLocaleDateString("en-US", {
+                      weekday: "short"
+                    })}
 
-                <p className="font-bold text-green-700">
-                  {28 + index}°C
-                </p>
+                  </h3>
 
-                <p className="text-gray-500 text-sm mt-2">
-                  Sunny
-                </p>
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/414/414927.png"
+                    alt=""
+                    className="w-14 mx-auto my-3"
+                  />
 
-              </div>
-            ))}
+                  <p className="font-bold text-green-700">
+
+                    {Math.round(item.main.temp)}°C
+
+                  </p>
+
+                  <p className="text-gray-500 text-sm mt-2">
+
+                    {item.weather[0].description}
+
+                  </p>
+
+                </div>
+
+              ))}
 
           </div>
 
