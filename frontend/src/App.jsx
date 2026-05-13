@@ -87,10 +87,8 @@ function Home() {
                  />
                  <div className="absolute inset-0 bg-green-700 opacity-80"></div>
                </div>
-
                <div className="relative z-10 max-w-4xl px-4">
-
-                 <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">
+                   <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">
                    Welcome to CROP CARE
                  </h1>
 

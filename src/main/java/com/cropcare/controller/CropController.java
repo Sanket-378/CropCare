@@ -19,6 +19,12 @@ public class CropController {
             @RequestParam double temp,
             @RequestParam double rain
     ) {
-        return service.getCrop(soil, weather, temp, rain);
+
+        return service.getCrop(
+                soil,
+                weather,
+                temp,
+                rain
+        );
     }
 }
