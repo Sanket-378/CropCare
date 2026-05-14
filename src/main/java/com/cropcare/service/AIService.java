@@ -10,28 +10,25 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class AIService {
 
-    @Value("${openrouter.api.key}")
+    @Value("${grok.api.key}")
     private String apiKey;
 
     public String getResponse(String message) {
 
         try {
 
-            String url = "https://openrouter.ai/api/v1/chat/completions";
-
+            // GROK API URL
+            String url = "https://api.groq.com/openai/v1/chat/completions";
             JSONObject body = new JSONObject();
 
-            body.put("model", "openai/gpt-3.5-turbo");
+            // GROK MODEL
+            body.put("model", "llama-3.1-8b-instant");            JSONArray messages = new JSONArray();
 
-            JSONArray messages = new JSONArray();
+            JSONObject systemMessage = new JSONObject();
 
-            JSONObject userMessage = new JSONObject();
+            systemMessage.put("role", "system");
 
-            userMessage.put("role", "user");
-
-            // UPDATED PROMPT
-
-            userMessage.put(
+            systemMessage.put(
                     "content",
                     "You are an AI Farmer Assistant for the CropCare project. " +
 
@@ -55,10 +52,16 @@ public class AIService {
 
                             "7. Support English, Hindi, and Marathi languages. " +
 
-                            "8. If translation is requested, translate the farming-related response appropriately. " +
-
-                            "Question: " + message
+                            "8. If translation is requested, translate the farming-related response appropriately."
             );
+
+            JSONObject userMessage = new JSONObject();
+
+            userMessage.put("role", "user");
+
+            userMessage.put("content", message);
+
+            messages.put(systemMessage);
 
             messages.put(userMessage);
 
@@ -68,6 +71,7 @@ public class AIService {
 
             headers.setContentType(MediaType.APPLICATION_JSON);
 
+            // GROK AUTH HEADER
             headers.setBearerAuth(apiKey);
 
             HttpEntity<String> entity =
