@@ -103,6 +103,7 @@ export default function IdentifyDisease() {
 
       </div>
 
+
     </div>
   );
 }

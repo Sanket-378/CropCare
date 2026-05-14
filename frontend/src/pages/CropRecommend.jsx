@@ -81,12 +81,12 @@ export default function CropRecommend() {
             <FaInfoCircle /> About
           </a>
 
-          <a
-            href="#market"
+          <Link
+            to="/market"
             className="flex items-center gap-1 hover:text-green-200 transition"
           >
             <FaStore /> Market
-          </a>
+          </Link>
 
         </div>
       </div>
@@ -310,6 +310,7 @@ export default function CropRecommend() {
 
         </div>
       </div>
+
     </div>
   );
 }

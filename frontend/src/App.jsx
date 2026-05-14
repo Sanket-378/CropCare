@@ -10,6 +10,7 @@ import CropRecommend from "./pages/CropRecommend";
 import AIChatbot from "./pages/AIChatbot";
 import WeatherPrediction from "./pages/WeatherPrediction";
 import RealImage from "./pages/RealImage";
+import Market from "./pages/Market";
 
 // ✅ HOME COMPONENT (your full UI moved here — unchanged)
 function Home() {
@@ -493,6 +494,7 @@ function App() {
   <Route path="/ai-chat" element={<AIChatbot />} />
   <Route path="/weather" element={<WeatherPrediction />} />
   <Route path="/real-image" element={<RealImage />} />
+  <Route path="/market" element={<Market />} />
 </Routes>
   );
 }
