@@ -2,10 +2,15 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 import os
-import tensorflow as tf
 import numpy as np
 from PIL import Image
 import json
+
+try:
+    import tflite_runtime.interpreter as tflite
+except ImportError:
+    # fallback if tflite-runtime isn't installed, use tensorflow's lite module
+    import tensorflow.lite as tflite
 
 # =========================
 # FLASK APP
@@ -27,20 +32,25 @@ CORS(
 )
 
 # =========================
-# LOAD MODEL
+# LOAD MODEL (TFLite)
 # =========================
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 MODEL_PATH = os.path.join(
     BASE_DIR,
-    "plant_disease_model.h5"
+    "plant_disease_model.tflite"
 )
-#model
-model = tf.keras.models.load_model(
-    MODEL_PATH,
-    compile=False
-)
+
+print("Loading TFLite model from:", MODEL_PATH)
+
+interpreter = tflite.Interpreter(model_path=MODEL_PATH)
+interpreter.allocate_tensors()
+
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
+
+print("TFLite model loaded successfully!")
 
 # =========================
 # LOAD CLASS LABELS
@@ -144,8 +154,10 @@ def predict():
         # Add batch dimension
         image = np.expand_dims(image, axis=0)
 
-        # Prediction
-        prediction = model.predict(image, verbose=0)
+        # Prediction using TFLite interpreter
+        interpreter.set_tensor(input_details[0]['index'], image)
+        interpreter.invoke()
+        prediction = interpreter.get_tensor(output_details[0]['index'])
 
         predicted_index = int(np.argmax(prediction))
 
