@@ -101,7 +101,7 @@ function Home() {
                    transition={{ duration: 1, delay: 0.5 }}
                    className="text-lg md:text-xl mb-12 text-gray-200"
                  >
-                   Your AI-powered agricultural assistant for smarter farming decisions and real-time crop guidance.
+                   Your AI-powered agricultural platform for smarter farming decisions and real-time crop guidance.
                  </motion.p>
 
                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-center">

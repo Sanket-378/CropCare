@@ -26,13 +26,9 @@ export default function IdentifyDisease() {
           Home
         </Link>
 
-        <button className="bg-green-400 text-white px-4 py-2 rounded-full">
-          Weather
-        </button>
 
-        <button className="bg-green-300 text-white px-4 py-2 rounded-full">
-          About
-        </button>
+
+
 
       </div>
 
