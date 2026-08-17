@@ -37,7 +37,10 @@ MODEL_PATH = os.path.join(
     "plant_disease_model.h5"
 )
 
-model = tf.keras.models.load_model(MODEL_PATH)
+model = tf.keras.models.load_model(
+    MODEL_PATH,
+    compile=False
+)
 
 # =========================
 # LOAD CLASS LABELS
