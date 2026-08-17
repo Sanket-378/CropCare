@@ -36,7 +36,7 @@ MODEL_PATH = os.path.join(
     BASE_DIR,
     "plant_disease_model.h5"
 )
-
+#model
 model = tf.keras.models.load_model(
     MODEL_PATH,
     compile=False
