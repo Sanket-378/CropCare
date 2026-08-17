@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+
 import os
 import tensorflow as tf
 import numpy as np
@@ -12,56 +13,45 @@ import json
 
 app = Flask(__name__)
 
-# Allow GitHub Pages frontend
 CORS(
     app,
     resources={
-        r"/*": {
+        r"/predict": {
             "origins": [
                 "https://sanket-378.github.io"
-            ],
-            "methods": ["GET", "POST", "OPTIONS"],
-            "allow_headers": ["Content-Type"]
+            ]
         }
-    }
+    },
+    methods=["POST", "OPTIONS"],
+    allow_headers=["Content-Type"]
 )
-
-# =========================
-# BASE DIRECTORY
-# =========================
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # =========================
 # LOAD MODEL
 # =========================
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 MODEL_PATH = os.path.join(
     BASE_DIR,
     "plant_disease_model.h5"
 )
 
-print("Loading model from:", MODEL_PATH)
-
 model = tf.keras.models.load_model(MODEL_PATH)
-
-print("Disease model loaded successfully!")
 
 # =========================
 # LOAD CLASS LABELS
 # =========================
 
-LABELS_PATH = os.path.join(
+LABEL_PATH = os.path.join(
     BASE_DIR,
     "class_labels.json"
 )
 
-with open(LABELS_PATH, "r") as f:
+with open(LABEL_PATH, "r") as f:
     class_indices = json.load(f)
 
 class_names = list(class_indices.keys())
-
-print("Class labels loaded:", class_names)
 
 # =========================
 # DISEASE SOLUTIONS
@@ -116,34 +106,22 @@ solutions = {
 }
 
 # =========================
-# HEALTH CHECK
-# =========================
-
-@app.route("/", methods=["GET"])
-def home():
-    return jsonify({
-        "status": "CropCare Disease Detection API is running",
-        "endpoint": "/predict"
-    })
-
-
-# =========================
 # PREDICTION API
 # =========================
 
 @app.route("/predict", methods=["POST", "OPTIONS"])
 def predict():
 
-    # Handle CORS preflight request
+    # Handle browser CORS preflight
     if request.method == "OPTIONS":
-        return jsonify({"status": "ok"}), 200
+        return "", 204
 
     try:
 
         # Check image
         if "image" not in request.files:
             return jsonify({
-                "error": "No image file provided"
+                "error": "No image file received"
             }), 400
 
         file = request.files["image"]
@@ -154,7 +132,7 @@ def predict():
         # Resize
         image = image.resize((128, 128))
 
-        # Convert to NumPy array
+        # Convert to NumPy
         image = np.array(image)
 
         # Normalize
@@ -168,46 +146,40 @@ def predict():
 
         predicted_index = int(np.argmax(prediction))
 
-        # Safety check
-        if predicted_index >= len(class_names):
-            return jsonify({
-                "error": "Invalid prediction index"
-            }), 500
-
         predicted_class = class_names[predicted_index]
 
-        confidence = float(
-            np.max(prediction)
-        ) * 100
+        confidence = float(np.max(prediction)) * 100
 
-        # Solution
         solution = solutions.get(
             predicted_class,
             "No solution available."
         )
 
         return jsonify({
-
             "disease": predicted_class,
-
-            "confidence": round(
-                confidence,
-                2
-            ),
-
+            "confidence": round(confidence, 2),
             "solution": solution
-
-        }), 200
+        })
 
     except Exception as e:
 
         print("Prediction error:", str(e))
 
         return jsonify({
-
             "error": str(e)
-
         }), 500
+
+
+# =========================
+# HEALTH CHECK
+# =========================
+
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "status": "Disease detection API is running",
+        "endpoint": "/predict"
+    })
 
 
 # =========================
@@ -216,12 +188,7 @@ def predict():
 
 if __name__ == "__main__":
 
-    port = int(
-        os.environ.get(
-            "PORT",
-            5000
-        )
-    )
+    port = int(os.environ.get("PORT", 5000))
 
     app.run(
         host="0.0.0.0",
