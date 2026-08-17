@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-
 import os
 import tensorflow as tf
 import numpy as np
@@ -13,25 +12,56 @@ import json
 
 app = Flask(__name__)
 
-CORS(app, origins=["https://sanket-378.github.io"])
+# Allow GitHub Pages frontend
+CORS(
+    app,
+    resources={
+        r"/*": {
+            "origins": [
+                "https://sanket-378.github.io"
+            ],
+            "methods": ["GET", "POST", "OPTIONS"],
+            "allow_headers": ["Content-Type"]
+        }
+    }
+)
+
 # =========================
-# LOAD MODEL
+# BASE DIRECTORY
 # =========================
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-MODEL_PATH = os.path.join(BASE_DIR, "plant_disease_model.h5")
+# =========================
+# LOAD MODEL
+# =========================
+
+MODEL_PATH = os.path.join(
+    BASE_DIR,
+    "plant_disease_model.h5"
+)
+
+print("Loading model from:", MODEL_PATH)
 
 model = tf.keras.models.load_model(MODEL_PATH)
+
+print("Disease model loaded successfully!")
+
 # =========================
 # LOAD CLASS LABELS
 # =========================
 
-with open("class_labels.json", "r") as f:
+LABELS_PATH = os.path.join(
+    BASE_DIR,
+    "class_labels.json"
+)
+
+with open(LABELS_PATH, "r") as f:
     class_indices = json.load(f)
 
-# Convert dictionary to list
 class_names = list(class_indices.keys())
+
+print("Class labels loaded:", class_names)
 
 # =========================
 # DISEASE SOLUTIONS
@@ -86,42 +116,71 @@ solutions = {
 }
 
 # =========================
+# HEALTH CHECK
+# =========================
+
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "status": "CropCare Disease Detection API is running",
+        "endpoint": "/predict"
+    })
+
+
+# =========================
 # PREDICTION API
 # =========================
 
-@app.route("/predict", methods=["POST"])
+@app.route("/predict", methods=["POST", "OPTIONS"])
 def predict():
+
+    # Handle CORS preflight request
+    if request.method == "OPTIONS":
+        return jsonify({"status": "ok"}), 200
 
     try:
 
-        # Get image file
+        # Check image
+        if "image" not in request.files:
+            return jsonify({
+                "error": "No image file provided"
+            }), 400
+
         file = request.files["image"]
 
         # Open image
         image = Image.open(file).convert("RGB")
 
-        # Resize image
+        # Resize
         image = image.resize((128, 128))
 
-        # Convert to array
+        # Convert to NumPy array
         image = np.array(image)
 
         # Normalize
-        image = image / 255.0
+        image = image.astype(np.float32) / 255.0
 
-        # Expand dimensions
+        # Add batch dimension
         image = np.expand_dims(image, axis=0)
 
-        # Predict
-        prediction = model.predict(image)
+        # Prediction
+        prediction = model.predict(image, verbose=0)
 
-        predicted_index = np.argmax(prediction)
+        predicted_index = int(np.argmax(prediction))
+
+        # Safety check
+        if predicted_index >= len(class_names):
+            return jsonify({
+                "error": "Invalid prediction index"
+            }), 500
 
         predicted_class = class_names[predicted_index]
 
-        confidence = float(np.max(prediction)) * 100
+        confidence = float(
+            np.max(prediction)
+        ) * 100
 
-        # Get solution
+        # Solution
         solution = solutions.get(
             predicted_class,
             "No solution available."
@@ -131,18 +190,25 @@ def predict():
 
             "disease": predicted_class,
 
-            "confidence": round(confidence, 2),
+            "confidence": round(
+                confidence,
+                2
+            ),
 
             "solution": solution
-        })
+
+        }), 200
 
     except Exception as e:
+
+        print("Prediction error:", str(e))
 
         return jsonify({
 
             "error": str(e)
 
-        })
+        }), 500
+
 
 # =========================
 # RUN APP
@@ -150,4 +216,15 @@ def predict():
 
 if __name__ == "__main__":
 
-    app.run(debug=True, port=5000)
+    port = int(
+        os.environ.get(
+            "PORT",
+            5000
+        )
+    )
+
+    app.run(
+        host="0.0.0.0",
+        port=port,
+        debug=False
+    )

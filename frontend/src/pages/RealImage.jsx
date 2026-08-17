@@ -112,9 +112,7 @@ function RealImage() {
   const analyzeImage = async () => {
 
     if (!image) {
-
       alert(text.uploadMsg);
-
       return;
     }
 
@@ -127,30 +125,44 @@ function RealImage() {
       setLoading(true);
 
       const response = await axios.post(
-
         "https://cropcare-disease.onrender.com/predict",
-
-        formData,
-
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        formData
       );
+
+      console.log("Disease API response:", response.data);
 
       setResult(response.data);
 
     } catch (error) {
 
-      console.log(error);
+      console.error("Disease prediction error:", error);
 
-      alert("Prediction failed");
+      if (error.response) {
+
+        console.error(
+          "Server response:",
+          error.response.data
+        );
+
+        alert(
+          error.response.data?.error ||
+          "Prediction failed"
+        );
+
+      } else {
+
+        alert(
+          "Unable to connect to disease detection server."
+        );
+
+      }
+
+    } finally {
+
+      setLoading(false);
+
     }
-
-    setLoading(false);
   };
-
   // PAGE TITLE
 
   useEffect(() => {
