@@ -22,7 +22,8 @@ public class AIService {
             JSONObject body = new JSONObject();
 
             // GROK MODEL
-            body.put("model", "llama-3.1-8b-instant");            JSONArray messages = new JSONArray();
+            body.put("model", "openai/gpt-oss-20b");
+            JSONArray messages = new JSONArray();
 
             JSONObject systemMessage = new JSONObject();
 
