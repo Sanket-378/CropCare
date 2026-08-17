@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import API_URL from "./api";
 
 import axios from "axios";
 
@@ -42,7 +43,7 @@ export default function WeatherPrediction() {
       setLoading(true);
 
       const response = await axios.get(
-        `http://localhost:8080/api/weather/${city}`
+        `${API_URL}/api/weather/${city}`
       );
 
       setWeatherData(response.data);

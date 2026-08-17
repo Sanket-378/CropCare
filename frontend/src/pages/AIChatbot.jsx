@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaRobot, FaMicrophone, FaPlus, FaSearch, FaEllipsisV, FaTrash } from "react-icons/fa";
+import API_URL from "./api";
 
 export default function AIChatbot() {
 
@@ -82,7 +83,7 @@ You are an AI farming assistant.
 Give short and useful farming advice.
 `;
 
-      const res = await fetch("http://localhost:8080/api/ai/chat", {
+      const res = await fetch(`${API_URL}/api/ai/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaHome, FaInfoCircle, FaStore } from "react-icons/fa";
+import API_URL from "./api";
 
 export default function CropRecommend() {
 
@@ -35,7 +36,7 @@ export default function CropRecommend() {
       // Spring Boot API
       const response = await fetch(
 
-        `http://localhost:8080/api/crop/recommend?soil=${soil}&weather=${weather}&temp=${temp}&rain=${rain}`
+        `${API_URL}/api/crop/recommend?soil=${soil}&weather=${weather}&temp=${temp}&rain=${rain}`
 
       );
 

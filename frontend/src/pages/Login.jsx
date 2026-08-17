@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import API_URL from "./api";
 
 export default function Login() {
 
@@ -19,7 +20,7 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/auth/login", {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
