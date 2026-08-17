@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaHome, FaInfoCircle, FaStore } from "react-icons/fa";
-import API_URL from "./api";
-
+import API_URL from "../api";
 export default function CropRecommend() {
 
   const [soil, setSoil] = useState("");

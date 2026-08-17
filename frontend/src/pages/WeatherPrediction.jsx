@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import API_URL from "./api";
+import API_URL from "../api";
 
 import axios from "axios";
 

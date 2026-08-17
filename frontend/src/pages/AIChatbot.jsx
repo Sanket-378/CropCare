@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaRobot, FaMicrophone, FaPlus, FaSearch, FaEllipsisV, FaTrash } from "react-icons/fa";
-import API_URL from "./api";
+import API_URL from "../api";
 
 export default function AIChatbot() {
 
