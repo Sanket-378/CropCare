@@ -13,8 +13,7 @@ import json
 
 app = Flask(__name__)
 
-CORS(app)
-
+CORS(app, origins=["https://sanket-378.github.io"])
 # =========================
 # LOAD MODEL
 # =========================
