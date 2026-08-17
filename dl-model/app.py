@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
+import os
 import tensorflow as tf
 import numpy as np
 from PIL import Image
@@ -18,10 +19,11 @@ CORS(app)
 # LOAD MODEL
 # =========================
 
-model = tf.keras.models.load_model(
-    "plant_disease_model.h5",
-    compile=False
-)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MODEL_PATH = os.path.join(BASE_DIR, "plant_disease_model.h5")
+
+model = tf.keras.models.load_model(MODEL_PATH)
 # =========================
 # LOAD CLASS LABELS
 # =========================
