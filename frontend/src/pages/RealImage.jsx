@@ -3,12 +3,21 @@ import axios from "axios";
 import API_URL from "../api";
 
 import {
-  FaHome,
   FaCloudSun,
-  FaMoon,
+  FaSearch,
+  FaMapMarkerAlt,
+  FaTint,
+  FaWind,
+  FaEye,
+  FaTemperatureHigh,
   FaSun,
-  FaLeaf,
-  FaLanguage
+  FaClock,
+  FaCalendarAlt,
+  FaHome,
+  FaInfoCircle,
+  FaTwitter,
+  FaInstagram,
+  FaFacebook
 } from "react-icons/fa";
 
 function RealImage() {
