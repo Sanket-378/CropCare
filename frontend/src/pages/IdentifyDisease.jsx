@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import API_URL from "../api";
 
 export default function IdentifyDisease() {
 
@@ -20,11 +21,11 @@ export default function IdentifyDisease() {
       <div className="p-4 flex gap-4">
 
         <Link
-          to="/"
-          className="bg-green-500 text-white px-4 py-2 rounded-full"
-        >
-          Home
-        </Link>
+                    to="/"
+                    className="flex items-center gap-1 hover:text-green-200 transition"
+                  >
+                    <FaHome /> Home
+                  </Link>
 
 
 
