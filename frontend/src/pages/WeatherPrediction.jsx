@@ -144,11 +144,12 @@ export default function WeatherPrediction() {
         <div className="flex items-center gap-6 text-white text-sm font-semibold">
 
           <Link
-                      to="/"
-                      className="flex items-center gap-1 hover:text-green-200 transition"
-                    >
-                      <FaHome /> Home
-                    </Link>
+              to="/"
+              className="hover:text-yellow-300 flex items-center gap-2"
+          >
+              <FaHome />
+              Home
+          </Link>
 
           <Link
               to="/about"
