@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API_URL from "../api";
 
 import {
   FaHome,
@@ -193,13 +194,12 @@ function RealImage() {
 
         <div className="flex items-center gap-6">
 
-          <button
-            onClick={() => window.location.href = "/"}
-            className="flex items-center gap-2 hover:text-yellow-300 transition"
-          >
-            <FaHome />
-            {text.home}
-          </button>
+          <Link
+                      to="/"
+                      className="flex items-center gap-1 hover:text-green-200 transition"
+                    >
+                      <FaHome /> Home
+                    </Link>
 
           <button
             onClick={() => window.location.href = "/weather"}

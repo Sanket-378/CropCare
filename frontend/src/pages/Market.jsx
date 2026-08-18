@@ -5,6 +5,7 @@ import {
   FaShoppingCart,
   FaLeaf
 } from "react-icons/fa";
+import API_URL from "../api";
 
 export default function Market() {
 
@@ -247,12 +248,12 @@ export default function Market() {
         {/* NAV LINKS */}
         <div className="flex items-center gap-10 text-green-600 font-semibold text-sm ml-auto">
 
-          <a
-            href="/"
-            className="hover:text-green-800 transition"
-          >
-            🏠 Home
-          </a>
+          <Link
+                      to="/"
+                      className="flex items-center gap-1 hover:text-green-200 transition"
+                    >
+                      <FaHome /> Home
+                    </Link>
 
           <a
             href="/market"
