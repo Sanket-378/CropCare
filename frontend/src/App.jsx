@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import IdentifyDisease from "./pages/IdentifyDisease";
 import CropRecommend from "./pages/CropRecommend";
 import AIChatbot from "./pages/AIChatbot";
 import WeatherPrediction from "./pages/WeatherPrediction";
@@ -200,7 +199,7 @@ function Home() {
                      Advanced AI-powered disease detection for your crops
                    </p>
 
-                   <Link to="/identify">
+                   <Link to="/real-image">
                      <button className="bg-green-600 text-white px-4 py-2 rounded-lg">
                        Identify Diseases
                      </button>
@@ -493,7 +492,6 @@ function App() {
   <Route path="/" element={<Home />} />
   <Route path="/login" element={<Login />} />
   <Route path="/register" element={<Register />} />
-  <Route path="/identify" element={<IdentifyDisease />} />
   <Route path="/crop_recommend" element={<CropRecommend />} />
   <Route path="/ai-chat" element={<AIChatbot />} />
   <Route path="/weather" element={<WeatherPrediction />} />
