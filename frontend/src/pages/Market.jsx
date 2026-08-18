@@ -1,22 +1,14 @@
 import { useState } from "react";
-import {
-  FaCloudSun,
-  FaSearch,
-  FaMapMarkerAlt,
-  FaTint,
-  FaWind,
-  FaEye,
-  FaTemperatureHigh,
-  FaSun,
-  FaClock,
-  FaCalendarAlt,
-  FaHome,
-  FaInfoCircle,
-  FaTwitter,
-  FaInstagram,
-  FaFacebook
-} from "react-icons/fa";
+import { Link } from "react-router-dom";
 import API_URL from "../api";
+
+import {
+  FaHome,
+  FaSearch,
+  FaSeedling,
+  FaLeaf,
+  FaShoppingCart
+} from "react-icons/fa";
 
 export default function Market() {
 

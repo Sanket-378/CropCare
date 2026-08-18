@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import API_URL from "../api";
 
 import {
-  FaCloudSun,
-  FaSearch,
-  FaMapMarkerAlt,
-  FaTint,
-  FaWind,
-  FaEye,
-  FaTemperatureHigh,
-  FaSun,
-  FaClock,
-  FaCalendarAlt,
   FaHome,
-  FaInfoCircle,
-  FaTwitter,
-  FaInstagram,
-  FaFacebook
+  FaCloudSun,
+  FaMoon,
+  FaSun,
+  FaLeaf,
+  FaLanguage
 } from "react-icons/fa";
 
 function RealImage() {
