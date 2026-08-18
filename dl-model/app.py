@@ -5,6 +5,7 @@ import os
 import numpy as np
 from PIL import Image
 import json
+import joblib
 
 try:
     import tflite_runtime.interpreter as tflite
@@ -18,57 +19,42 @@ except ImportError:
 
 app = Flask(__name__)
 
+FRONTEND_ORIGIN = "https://sanket-378.github.io"
+
 CORS(
     app,
     resources={
-        r"/predict": {
-            "origins": [
-                "https://sanket-378.github.io"
-            ]
-        }
+        r"/predict": {"origins": [FRONTEND_ORIGIN]},
+        r"/predict_crop": {"origins": [FRONTEND_ORIGIN]},
     },
     methods=["POST", "OPTIONS"],
     allow_headers=["Content-Type"]
 )
 
-# =========================
-# LOAD MODEL (TFLite)
-# =========================
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-MODEL_PATH = os.path.join(
-    BASE_DIR,
-    "plant_disease_model.tflite"
-)
+# =========================
+# LOAD DISEASE MODEL (TFLite)
+# =========================
 
-print("Loading TFLite model from:", MODEL_PATH)
+DISEASE_MODEL_PATH = os.path.join(BASE_DIR, "plant_disease_model.tflite")
 
-interpreter = tflite.Interpreter(model_path=MODEL_PATH)
+print("Loading TFLite disease model from:", DISEASE_MODEL_PATH)
+
+interpreter = tflite.Interpreter(model_path=DISEASE_MODEL_PATH)
 interpreter.allocate_tensors()
 
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
-print("TFLite model loaded successfully!")
+print("Disease model loaded successfully!")
 
-# =========================
-# LOAD CLASS LABELS
-# =========================
-
-LABEL_PATH = os.path.join(
-    BASE_DIR,
-    "class_labels.json"
-)
+LABEL_PATH = os.path.join(BASE_DIR, "class_labels.json")
 
 with open(LABEL_PATH, "r") as f:
     class_indices = json.load(f)
 
 class_names = list(class_indices.keys())
-
-# =========================
-# DISEASE SOLUTIONS
-# =========================
 
 solutions = {
 
@@ -119,56 +105,53 @@ solutions = {
 }
 
 # =========================
-# PREDICTION API
+# LOAD CROP RECOMMENDATION MODEL (scikit-learn)
+# =========================
+
+MODELS_DIR = os.path.join(BASE_DIR, "models")
+
+print("Loading crop recommendation models...")
+
+crop_model = joblib.load(os.path.join(MODELS_DIR, "crop_model.pkl"))
+soil_encoder = joblib.load(os.path.join(MODELS_DIR, "soil_encoder.pkl"))
+season_encoder = joblib.load(os.path.join(MODELS_DIR, "season_encoder.pkl"))
+crop_encoder = joblib.load(os.path.join(MODELS_DIR, "crop_encoder.pkl"))
+
+print("Crop recommendation models loaded successfully!")
+
+
+# =========================
+# DISEASE PREDICTION API
 # =========================
 
 @app.route("/predict", methods=["POST", "OPTIONS"])
 def predict():
 
-    # Handle browser CORS preflight
     if request.method == "OPTIONS":
         return "", 204
 
     try:
 
-        # Check image
         if "image" not in request.files:
-            return jsonify({
-                "error": "No image file received"
-            }), 400
+            return jsonify({"error": "No image file received"}), 400
 
         file = request.files["image"]
 
-        # Open image
         image = Image.open(file).convert("RGB")
-
-        # Resize
         image = image.resize((128, 128))
-
-        # Convert to NumPy
         image = np.array(image)
-
-        # Normalize
         image = image.astype(np.float32) / 255.0
-
-        # Add batch dimension
         image = np.expand_dims(image, axis=0)
 
-        # Prediction using TFLite interpreter
         interpreter.set_tensor(input_details[0]['index'], image)
         interpreter.invoke()
         prediction = interpreter.get_tensor(output_details[0]['index'])
 
         predicted_index = int(np.argmax(prediction))
-
         predicted_class = class_names[predicted_index]
-
         confidence = float(np.max(prediction)) * 100
 
-        solution = solutions.get(
-            predicted_class,
-            "No solution available."
-        )
+        solution = solutions.get(predicted_class, "No solution available.")
 
         return jsonify({
             "disease": predicted_class,
@@ -177,12 +160,61 @@ def predict():
         })
 
     except Exception as e:
-
         print("Prediction error:", str(e))
+        return jsonify({"error": str(e)}), 500
 
-        return jsonify({
-            "error": str(e)
-        }), 500
+
+# =========================
+# CROP RECOMMENDATION API
+# =========================
+
+@app.route("/predict_crop", methods=["POST", "OPTIONS"])
+def predict_crop():
+
+    if request.method == "OPTIONS":
+        return "", 204
+
+    try:
+
+        data = request.json
+
+        if not data:
+            return jsonify({"error": "No JSON body received"}), 400
+
+        required_fields = ["soil", "weather", "temp", "rain"]
+        missing = [f for f in required_fields if f not in data]
+
+        if missing:
+            return jsonify({
+                "error": f"Missing fields: {', '.join(missing)}"
+            }), 400
+
+        soil = data["soil"]
+        weather = data["weather"]
+        temperature = float(data["temp"])
+        rainfall = float(data["rain"])
+
+        # Convert frontend weather -> season
+        if weather == "Sunny":
+            season = "Summer"
+        elif weather == "Rainy":
+            season = "Rainy"
+        else:
+            season = "Winter"
+
+        soil_encoded = soil_encoder.transform([soil])[0]
+        season_encoded = season_encoder.transform([season])[0]
+
+        features = np.array([[soil_encoded, season_encoded, temperature, rainfall]])
+
+        prediction = crop_model.predict(features)
+        crop = crop_encoder.inverse_transform(prediction)[0]
+
+        return jsonify({"crop": crop})
+
+    except Exception as e:
+        print("Crop prediction error:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 
 # =========================
@@ -192,8 +224,8 @@ def predict():
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({
-        "status": "Disease detection API is running",
-        "endpoint": "/predict"
+        "status": "CropCare API is running",
+        "endpoints": ["/predict", "/predict_crop"]
     })
 
 
