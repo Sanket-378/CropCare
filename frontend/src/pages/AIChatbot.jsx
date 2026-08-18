@@ -1,7 +1,16 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
-import { FaRobot, FaMicrophone, FaPlus, FaSearch, FaEllipsisV, FaTrash } from "react-icons/fa";
 import API_URL from "../api";
+
+import {
+  FaHome,
+  FaCloudSun,
+  FaMoon,
+  FaSun,
+  FaLeaf,
+  FaLanguage
+} from "react-icons/fa";
 
 export default function AIChatbot() {
 
