@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { FaRobot, FaMicrophone, FaPlus, FaSearch, FaEllipsisV, FaTrash } from "react-icons/fa";
 import API_URL from "../api";
 
@@ -334,14 +335,13 @@ Give short and useful farming advice.
 
           {/* HOME BUTTON */}
 
-          <button
-            onClick={() => window.location.href = "/"}
-            className="bg-white text-green-700 font-semibold px-4 py-2 rounded-lg hover:bg-green-100 transition h-08"
-          >
-
-            Home
-
-          </button>
+           <Link
+                                  to="/"
+                                  className="hover:text-yellow-300 flex items-center gap-2"
+                              >
+                                  <FaHome />
+                                  Home
+                              </Link>
 
         </div>
 
