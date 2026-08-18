@@ -203,13 +203,13 @@ function RealImage() {
                         Home
                     </Link>
 
-          <button
-            onClick={() => window.location.href = "/weather"}
+          <Link
+            to="/weather"
             className="flex items-center gap-2 hover:text-yellow-300 transition"
           >
             <FaCloudSun />
             {text.weather}
-          </button>
+          </Link>
 
         </div>
 
