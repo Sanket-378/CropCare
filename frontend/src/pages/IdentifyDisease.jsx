@@ -1,7 +1,23 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API_URL from "../api";
-
+import {
+  FaCloudSun,
+  FaSearch,
+  FaMapMarkerAlt,
+  FaTint,
+  FaWind,
+  FaEye,
+  FaTemperatureHigh,
+  FaSun,
+  FaClock,
+  FaCalendarAlt,
+  FaHome,
+  FaInfoCircle,
+  FaTwitter,
+  FaInstagram,
+  FaFacebook
+} from "react-icons/fa";
 export default function IdentifyDisease() {
 
   const navigate = useNavigate();

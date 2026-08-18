@@ -1,9 +1,20 @@
 import { useState } from "react";
 import {
-  FaSeedling,
+  FaCloudSun,
   FaSearch,
-  FaShoppingCart,
-  FaLeaf
+  FaMapMarkerAlt,
+  FaTint,
+  FaWind,
+  FaEye,
+  FaTemperatureHigh,
+  FaSun,
+  FaClock,
+  FaCalendarAlt,
+  FaHome,
+  FaInfoCircle,
+  FaTwitter,
+  FaInstagram,
+  FaFacebook
 } from "react-icons/fa";
 import API_URL from "../api";
 
