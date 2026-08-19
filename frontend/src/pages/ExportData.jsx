@@ -97,6 +97,39 @@ export default function ExportData() {
   });
 
   return (
+      {/* NAVBAR */}
+            <div className="bg-green-600 text-white px-6 py-3 flex justify-between items-center shadow-md">
+
+              <h1 className="text-xl font-bold flex items-center gap-2">
+                🌱 Farmer's Helper
+              </h1>
+
+              <div className="flex gap-6 items-center">
+
+                <Link
+                  to="/"
+                  className="flex items-center gap-1 hover:text-green-200 transition"
+                >
+                  <FaHome /> Home
+                </Link>
+
+                <a
+                  href="#about"
+                  className="flex items-center gap-1 hover:text-green-200 transition"
+                >
+                  <FaInfoCircle /> About
+                </a>
+
+                <Link
+                  to="/market"
+                  className="flex items-center gap-1 hover:text-green-200 transition"
+                >
+                  <FaStore /> Market
+                </Link>
+
+              </div>
+            </div>
+
     <div style={styles.container}>
       {/* HERO SECTION */}
       <div style={styles.hero}>
