@@ -1,3 +1,5 @@
+
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -77,6 +79,7 @@ const cropData = [
 export default function ExportData() {
   const [search, setSearch] = useState("");
   const [selectedCrop, setSelectedCrop] = useState("All");
+  const [showMarketTip, setShowMarketTip] = useState(false);
 
   const cropTypes = [
     "All",
@@ -101,158 +104,178 @@ export default function ExportData() {
   });
 
   return (
-      <>
-          {/* NAVBAR */}
-          <div className="bg-green-600 text-white px-6 py-3 flex justify-between items-center shadow-md">
+    <>
+      {/* NAVBAR */}
+      <div className="bg-green-600 text-white px-6 py-3 flex justify-between items-center shadow-md">
 
-            <h1 className="text-xl font-bold flex items-center gap-2">
-              🌱 Farmer's Helper
-            </h1>
+        <h1 className="text-xl font-bold flex items-center gap-2">
+          🌱 Farmer's Helper
+        </h1>
 
-            <div className="flex gap-6 items-center">
+        <div className="flex gap-6 items-center">
 
-              <Link
-                to="/"
-                className="flex items-center gap-1 hover:text-green-200 transition"
-              >
-                <Home size={18} />
-                Home
-              </Link>
+          <Link
+            to="/"
+            className="flex items-center gap-1 hover:text-green-200 transition"
+          >
+            <Home size={18} />
+            Home
+          </Link>
 
-              <a
-                href="#about"
-                className="flex items-center gap-1 hover:text-green-200 transition"
-              >
-                <Info size={18} />
-                About
-              </a>
+          <a
+            href="#about"
+            className="flex items-center gap-1 hover:text-green-200 transition"
+          >
+            <Info size={18} />
+            About
+          </a>
 
-              <Link
-                to="/market"
-                className="flex items-center gap-1 hover:text-green-200 transition"
-              >
-                <Store size={18} />
-                Market
-              </Link>
+          {/* MARKET LINK WITH POPUP TOOLTIP */}
+          <div
+            className="relative"
+            onMouseEnter={() => setShowMarketTip(true)}
+            onMouseLeave={() => setShowMarketTip(false)}
+          >
 
-            </div>
+            <Link
+              to="/market"
+              className="flex items-center gap-1 hover:text-green-200 transition"
+            >
+              <Store size={18} />
+              Market
+            </Link>
+
+            {showMarketTip && (
+              <div className="absolute top-full right-0 mt-2 w-56 bg-white text-gray-800 text-sm rounded-lg shadow-xl p-3 z-50">
+
+                <div className="absolute -top-1 right-4 w-3 h-3 bg-white rotate-45"></div>
+
+                🛒 Buy seeds & fertilizers directly from our Market section!
+
+              </div>
+            )}
+
           </div>
 
-    <div style={styles.container}>
-      {/* HERO SECTION */}
-      <div style={styles.hero}>
-        <img
-          src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1600&auto=format&fit=crop"
-          alt="farm"
-          style={styles.heroImage}
-        />
-
-        <div style={styles.overlay}>
-          <h1 style={styles.heroTitle}>Export Market Analysis</h1>
-
-          <p style={styles.heroText}>
-            Discover the most demanded crops in international markets
-            and make informed decisions for your farming business.
-          </p>
-
-          <button style={styles.heroButton}>
-            VIEW EXPORT DATA
-          </button>
         </div>
       </div>
 
-      {/* TITLE */}
-      <div style={styles.headingSection}>
-        <h2 style={styles.heading}>Export Market Trends</h2>
-
-        <p style={styles.subHeading}>
-          Real-time crop export demand and international market trends
-        </p>
-      </div>
-
-      {/* SEARCH */}
-      <div style={styles.searchContainer}>
-        <div style={styles.searchBox}>
-          <Search color="gray" />
-
-          <input
-            type="text"
-            placeholder="Search by crop, country or month..."
-            style={styles.searchInput}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+      <div style={styles.container}>
+        {/* HERO SECTION */}
+        <div style={styles.hero}>
+          <img
+            src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1600&auto=format&fit=crop"
+            alt="farm"
+            style={styles.heroImage}
           />
-        </div>
 
-        {/* FILTER BUTTONS */}
-        <div style={styles.filterSection}>
-          <h3>Filter by Crop Type</h3>
+          <div style={styles.overlay}>
+            <h1 style={styles.heroTitle}>Export Market Analysis</h1>
 
-          <div style={styles.buttonContainer}>
-            {cropTypes.map((crop) => (
-              <button
-                key={crop}
-                onClick={() => setSelectedCrop(crop)}
-                style={{
-                  ...styles.filterButton,
-                  backgroundColor:
-                    selectedCrop === crop ? "#22c55e" : "#d9f99d",
-                  color:
-                    selectedCrop === crop ? "white" : "black",
-                }}
-              >
-                {crop}
-              </button>
-            ))}
+            <p style={styles.heroText}>
+              Discover the most demanded crops in international markets
+              and make informed decisions for your farming business.
+            </p>
+
+            <button style={styles.heroButton}>
+              VIEW EXPORT DATA
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* CARDS */}
-      <div style={styles.cardGrid}>
-        {filteredData.map((item) => (
-          <div key={item.id} style={styles.card}>
-            <div style={{ position: "relative" }}>
-              <img
-                src={item.image}
-                alt={item.crop}
-                style={styles.cardImage}
-              />
+        {/* TITLE */}
+        <div style={styles.headingSection}>
+          <h2 style={styles.heading}>Export Market Trends</h2>
 
-              <span style={styles.badge}>
-                {item.demand} Demand
-              </span>
-            </div>
+          <p style={styles.subHeading}>
+            Real-time crop export demand and international market trends
+          </p>
+        </div>
 
-            <div style={styles.cardBody}>
-              <div style={styles.cardTitle}>
-                <Wheat color="green" />
-                <h2>{item.crop}</h2>
-              </div>
+        {/* SEARCH */}
+        <div style={styles.searchContainer}>
+          <div style={styles.searchBox}>
+            <Search color="gray" />
 
-              <div style={styles.info}>
-                <p>
-                  <Globe size={16} /> Country: {item.country}
-                </p>
+            <input
+              type="text"
+              placeholder="Search by crop, country or month..."
+              style={styles.searchInput}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
 
-                <p>
-                  <TrendingUp size={16} /> Month: {item.month}
-                </p>
+          {/* FILTER BUTTONS */}
+          <div style={styles.filterSection}>
+            <h3>Filter by Crop Type</h3>
 
-                <p>
-                  <BarChart3 size={16} /> Quantity:{" "}
-                  {item.quantity}
-                </p>
-              </div>
-
-              <button style={styles.detailsButton}>
-                View Details
-              </button>
+            <div style={styles.buttonContainer}>
+              {cropTypes.map((crop) => (
+                <button
+                  key={crop}
+                  onClick={() => setSelectedCrop(crop)}
+                  style={{
+                    ...styles.filterButton,
+                    backgroundColor:
+                      selectedCrop === crop ? "#22c55e" : "#d9f99d",
+                    color:
+                      selectedCrop === crop ? "white" : "black",
+                  }}
+                >
+                  {crop}
+                </button>
+              ))}
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* CARDS */}
+        <div style={styles.cardGrid}>
+          {filteredData.map((item) => (
+            <div key={item.id} style={styles.card}>
+              <div style={{ position: "relative" }}>
+                <img
+                  src={item.image}
+                  alt={item.crop}
+                  style={styles.cardImage}
+                />
+
+                <span style={styles.badge}>
+                  {item.demand} Demand
+                </span>
+              </div>
+
+              <div style={styles.cardBody}>
+                <div style={styles.cardTitle}>
+                  <Wheat color="green" />
+                  <h2>{item.crop}</h2>
+                </div>
+
+                <div style={styles.info}>
+                  <p>
+                    <Globe size={16} /> Country: {item.country}
+                  </p>
+
+                  <p>
+                    <TrendingUp size={16} /> Month: {item.month}
+                  </p>
+
+                  <p>
+                    <BarChart3 size={16} /> Quantity:{" "}
+                    {item.quantity}
+                  </p>
+                </div>
+
+                <button style={styles.detailsButton}>
+                  View Details
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
