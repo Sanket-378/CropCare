@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/weather")
-
+@CrossOrigin("*")
 public class WeatherController {
 
     @Autowired
@@ -17,5 +17,9 @@ public class WeatherController {
     public String getWeather(@PathVariable String city) {
 
         return weatherService.getWeather(city);
+    }
+    @GetMapping("/coords")
+    public String getWeatherByCoords(@RequestParam double lat, @RequestParam double lon) {
+        return weatherService.getWeatherByCoords(lat, lon);
     }
 }

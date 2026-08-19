@@ -74,16 +74,31 @@ export default function WeatherPrediction() {
 
         try {
 
+          setLoading(true);
+
           const response = await axios.get(
-            `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=79a3f444d846e076ef99c344e342637f&units=metric`
+            `${API_URL}/api/weather/coords?lat=${lat}&lon=${lon}`
           );
 
           setWeatherData(response.data);
 
+          setLoading(false);
+
         } catch (error) {
 
           console.log(error);
+
+          setLoading(false);
+
+          alert("Unable to fetch weather for your location");
         }
+      },
+
+      (error) => {
+
+        console.log(error);
+
+        alert("Location access denied or unavailable");
       }
     );
   };

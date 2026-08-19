@@ -17,39 +17,45 @@ export default function CropRecommend() {
   // API CALL
   const handleSubmit = async () => {
 
-    // Validation
     if (!soil || !weather || !temp || !rain) {
-
       setError("Please fill all fields");
       return;
     }
 
     setError("");
-
     setLoading(true);
-
     setResult("");
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 150000); // 150s cap
 
     try {
 
-      // Spring Boot API
       const response = await fetch(
-
-        `${API_URL}/api/crop/recommend?soil=${soil}&weather=${weather}&temp=${temp}&rain=${rain}`
-
+        `${API_URL}/api/crop/recommend?soil=${soil}&weather=${weather}&temp=${temp}&rain=${rain}`,
+        { signal: controller.signal }
       );
 
-      // Result from backend
-      const data = await response.text();
+      clearTimeout(timeoutId);
 
+      if (!response.ok) {
+        throw new Error(`Server returned status ${response.status}`);
+      }
+
+      const data = await response.text();
       setResult(data);
 
     } catch (err) {
 
-      setError("Server Error. Please try again.");
+      clearTimeout(timeoutId);
+
+      if (err.name === "AbortError") {
+        setError("Server is taking too long to respond. It may be waking up from sleep — please try again in a moment.");
+      } else {
+        setError("Server Error. Please try again.");
+      }
 
     } finally {
-
       setLoading(false);
     }
   };
