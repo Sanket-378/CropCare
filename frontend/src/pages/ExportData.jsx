@@ -1,10 +1,14 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Search,
   Globe,
   TrendingUp,
   BarChart3,
   Wheat,
+  Home,
+  Info,
+  Store,
 } from "lucide-react";
 
 const cropData = [
@@ -97,38 +101,42 @@ export default function ExportData() {
   });
 
   return (
-      {/* NAVBAR */}
-            <div className="bg-green-600 text-white px-6 py-3 flex justify-between items-center shadow-md">
+      <>
+          {/* NAVBAR */}
+          <div className="bg-green-600 text-white px-6 py-3 flex justify-between items-center shadow-md">
 
-              <h1 className="text-xl font-bold flex items-center gap-2">
-                🌱 Farmer's Helper
-              </h1>
+            <h1 className="text-xl font-bold flex items-center gap-2">
+              🌱 Farmer's Helper
+            </h1>
 
-              <div className="flex gap-6 items-center">
+            <div className="flex gap-6 items-center">
 
-                <Link
-                  to="/"
-                  className="flex items-center gap-1 hover:text-green-200 transition"
-                >
-                  <FaHome /> Home
-                </Link>
+              <Link
+                to="/"
+                className="flex items-center gap-1 hover:text-green-200 transition"
+              >
+                <Home size={18} />
+                Home
+              </Link>
 
-                <a
-                  href="#about"
-                  className="flex items-center gap-1 hover:text-green-200 transition"
-                >
-                  <FaInfoCircle /> About
-                </a>
+              <a
+                href="#about"
+                className="flex items-center gap-1 hover:text-green-200 transition"
+              >
+                <Info size={18} />
+                About
+              </a>
 
-                <Link
-                  to="/market"
-                  className="flex items-center gap-1 hover:text-green-200 transition"
-                >
-                  <FaStore /> Market
-                </Link>
+              <Link
+                to="/market"
+                className="flex items-center gap-1 hover:text-green-200 transition"
+              >
+                <Store size={18} />
+                Market
+              </Link>
 
-              </div>
             </div>
+          </div>
 
     <div style={styles.container}>
       {/* HERO SECTION */}
